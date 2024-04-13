@@ -1,0 +1,6 @@
+[build]
+bin="bin/src/main"
+
+[exclude]
+paths = ["tmp/*", "data/*"]
+
