@@ -15,6 +15,7 @@ func main() {
 		return views.Boilerplate().Render(c.Request().Context(), c.Response().Writer)
 	})
 	r.GET("/encode", r.GetEncode)
+	r.POST("/encode", r.PostEncode)
 
-	r.Logger.Fatal(r.Start(":8888"))
+	r.Logger.Fatal(r.Start(":8080"))
 }

@@ -1,15 +1,18 @@
 package views
+import  partials "steganography/views/partials"
 
 
 templ Boilerplate(){
+    
 
     <html>
         <head>
             <script src="https://unpkg.com/htmx.org@1.5.0"></script>
             <script src="https://cdn.tailwindcss.com"></script>
         </head>
-        <body>
-            @Navbar()    
+        <body class="bg-gray-200">
+            @partials.Navbar() 
+            @Body()
         </body>
     </html>
 }
