@@ -1,27 +1,30 @@
 package pages
-import consts "steganography/views/consts"
+import consts "steganography/consts"
 
 var formElements=[...]string{"Base File","Encode File"}
 var formNames=[...]string{"baseFile","encodeFile"}
 
 templ GetEncode(){
     <div class={ consts.ChildrenBody+consts.FontText+"bg-black-600"}>
-        <form  hx-post="/encode" hx-target="#encode_target" hx-swap="innerHTML" action="/encode" method="post" class={ consts.Form}>
-            for index,elements:=range formElements{
+        <form  hx-post="/encode" hx-target="#encode-target" hx-encoding="multipart/form-data" hx-swap="innerHTML" hx-trigger="submit" class={ consts.Form}>
+            
                 <div class="mb-4" >
-                    <label for={formNames[index]} class={ consts.FormLabel}>{elements}</label>
-                    <input type="file" id={formNames[index]} name={formNames[index] }class={consts.Form} required/>
+                    <label for="encode-image" class={ consts.FormLabel+" "+consts.FontText}>Image:</label>
+                    <input type="file" id="encode-image" name="encode-image" class={consts.FormTextInput} required/>
                 </div>
-            }
+                <div class="mb-4" >
+                    <label for="encode-text" class={ consts.FormLabel+" "+consts.FontText}>Text to hide:</label>
+                    <input type="text" id="encode-text" name="encode-text" class={consts.FormTextInput} required/>
+                </div>
             <button type="submit" class={ consts.BlueButton}>Encode</button> 
         </form>
            
     </div>
 }
 
-templ RenderEncode(){
-    <div id="encode_target" class={ consts.ChildrenBody}>
-        <h1>Encode</h1>
-        <p>waiting for Encode file</p>
-    </div>
+templ RenderEncode(imagePath string){
+    
+    <h1 class={consts.TextLarge}>Decoded Image: </h1>
+    <img src={"output/"+imagePath}/>
+    <button type="button" class={consts.BlueButton}><a href={ "/encode/"+templ.URL(imagePath)}>Download</a></button>
 }

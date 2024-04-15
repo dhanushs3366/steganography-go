@@ -1,10 +1,13 @@
 package views
-import consts "steganography/views/consts"
+import consts "steganography/consts"
 
 templ Body(){
     <div class="w-full  flex flex-row mx-5" id="body">
-        <div class={ consts.ChildrenBody}>
-            <p class="font-sans text-xl text-white">Welcome Home</p>
+        <div class={ consts.ChildrenBody} id="encode-body">
+            <p class={consts.TextLarge}>Welcome Home</p>
+        </div>
+        <div class={ consts.ChildrenBody} id="encode-target">
+            <p class={consts.TextLarge}>Bye Home</p>
         </div>
     </div>
 }

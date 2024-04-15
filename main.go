@@ -14,8 +14,15 @@ func main() {
 	r.GET("/", func(c echo.Context) error {
 		return views.Boilerplate().Render(c.Request().Context(), c.Response().Writer)
 	})
+
+	r.Static("/output", "output")
 	r.GET("/encode", r.GetEncode)
 	r.POST("/encode", r.PostEncode)
+	r.GET("/encode/:filename", func(c echo.Context) error {
 
+		filename := c.Param("filename")
+
+		return c.Attachment("output/"+filename, filename)
+	})
 	r.Logger.Fatal(r.Start(":8080"))
 }

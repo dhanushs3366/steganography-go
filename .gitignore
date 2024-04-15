@@ -2,3 +2,4 @@ tmp/
 views/*.go
 views/pages/*.go
 views/*/*.go
+output/*
