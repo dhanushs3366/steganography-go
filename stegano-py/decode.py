@@ -1,7 +1,4 @@
 
-import numpy as np
-from PIL import Image
-
 
 import numpy as np
 from PIL import Image
@@ -42,7 +39,9 @@ def decode(image_path: str) -> str:
     decode_txt=""
     for bit in total_bits:
         decode_txt+=chr(bit)
-    print(decode_txt)
+    # write decode_txt to a text file in utf-8 encoding
+    with open("../output/decoded.txt", "w", encoding="utf-8") as f:
+        f.write(decode_txt)
     return decode_txt
 
 # Example usage:
