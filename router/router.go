@@ -3,20 +3,18 @@ package router
 import (
 	"fmt"
 	"image"
-	"image/jpeg"
 	"image/png"
 	"io"
+	"net/http"
+	"net/url"
 	"os"
-	"path"
-	"path/filepath"
-	"steganography/stegano"
 	pages "steganography/views/pages"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 )
 
 const outputDir = "output"
+const pyScriptURL = "http://localhost:3000"
 
 type Router struct {
 	*echo.Echo
@@ -29,6 +27,7 @@ func (r *Router) GetEncode(c echo.Context) error {
 func (r *Router) PostEncode(c echo.Context) error {
 
 	file, err := c.FormFile("encode-image")
+	text := c.FormValue("encode-text")
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -60,6 +59,20 @@ func (r *Router) PostEncode(c echo.Context) error {
 		fmt.Println(err)
 		return err
 	}
+
+	// image is saved locally by python server just call the request dont need to save the mime type received from response from python server just need a confirmation to proceed
+
+	formData := url.Values{}
+	formData.Add("text", text) // Use "text" as the key
+	res, err := http.PostForm(pyScriptURL+"/encode", formData)
+
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	content, _ := io.ReadAll(res.Body)
+	fmt.Println(string(content))
 	return pages.RenderEncode(dstName).Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -84,6 +97,7 @@ func (r *Router) GetDecode(c echo.Context) error {
 }
 
 func (r *Router) PostDecode(c echo.Context) error {
+	// Retrieve the uploaded image file
 	file, err := c.FormFile("encode-image")
 	if err != nil {
 		fmt.Println(err)
@@ -96,27 +110,15 @@ func (r *Router) PostDecode(c echo.Context) error {
 	}
 	defer src.Close()
 
-	ext := filepath.Ext(file.Filename)
-	isPNG := strings.EqualFold(ext, ".png")
-
-	var img image.Image
-	if isPNG {
-		img, err = r.PngToJpg(src)
-		if err != nil {
-			return err
-		}
-	} else {
-		img, _, err = image.Decode(src)
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
+	// Decode the image
+	img, _, err := image.Decode(src)
+	if err != nil {
+		fmt.Println(err)
+		return err
 	}
 
-	dstName := "decode"
-	if isPNG {
-		dstName = strings.TrimSuffix(dstName, ext) + ".jpg"
-	}
+	// Create a destination file with PNG extension
+	dstName := "decode.png"
 	dst, err := os.Create(outputDir + "/" + dstName)
 	if err != nil {
 		fmt.Println(err)
@@ -124,26 +126,29 @@ func (r *Router) PostDecode(c echo.Context) error {
 	}
 	defer dst.Close()
 
-	err = jpeg.Encode(dst, img, nil)
-	if err != nil {
+	// Encode the image as PNG and save to the destination file
+	if err := png.Encode(dst, img); err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	newPath := path.Join(outputDir, dstName)
-
-	err = os.Rename(dst.Name(), newPath)
+	// Send a request to the Python server
+	formData := url.Values{}
+	formData.Add("image_path", "../output/encoded.png")
+	res, err := http.PostForm(pyScriptURL+"/decode", formData)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
+	defer res.Body.Close()
 
-	text, err := stegano.Decode(newPath)
+	// Read and print the response body
+	content, err := io.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	println(text)
-	return pages.RenderDecode(text).Render(c.Request().Context(), c.Response().Writer)
+	decoded_txt := string(content)
 
+	return pages.RenderDecode(decoded_txt).Render(c.Request().Context(), c.Response().Writer)
 }

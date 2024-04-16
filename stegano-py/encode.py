@@ -6,7 +6,7 @@ import numpy as np
 
 def convert_text_to_bin(text: str) -> str:
     bytes_text = ''.join(format(ord(letter), '08b') for letter in text)
-    print(bytes_text)
+    # print(bytes_text)
     return bytes_text
 
 def change_lsb(pixel: np.uint8, bit: str) -> np.uint8:
@@ -43,4 +43,4 @@ def encode(image_path: str, text: str):
     print("Image saved")
 
 
-encode("../output/encode.png", "Hello, world!")
+# encode("../output/encode.png", "Hello, world!")

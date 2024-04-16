@@ -1,8 +1,8 @@
 package main
 
 import (
-	router "steganography/router"
-	views "steganography/views"
+	"steganography/router"
+	"steganography/views"
 
 	"github.com/labstack/echo/v4"
 )
@@ -28,4 +28,5 @@ func main() {
 	r.GET("/decode", r.GetDecode)
 	r.POST("/decode", r.PostDecode)
 	r.Logger.Fatal(r.Start(":8080"))
+
 }

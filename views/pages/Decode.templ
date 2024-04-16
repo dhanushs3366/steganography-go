@@ -19,5 +19,8 @@ templ GetDecode(){
 
 templ RenderDecode(decodedText string){
     <h3 class={consts.TextMedium}>Decoded Text:</h3>
-    <p class={consts.TextSmall}>{ decodedText }</p>
+    <div class="h-64 overflow-y-auto">
+        <p class={consts.TextSmall}>{ decodedText }</p>
+    </div>
+
 }

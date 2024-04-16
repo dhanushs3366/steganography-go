@@ -45,5 +45,5 @@ def decode(image_path: str) -> str:
     return decode_txt
 
 # Example usage:
-decoded_message = decode("../output/encoded.png")
-print("Decoded message:", decoded_message[:50])
+# decoded_message = decode("../output/encoded.png")
+# print("Decoded message:", decoded_message[:50])
