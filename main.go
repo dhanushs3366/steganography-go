@@ -24,5 +24,8 @@ func main() {
 
 		return c.Attachment("output/"+filename, filename)
 	})
+
+	r.GET("/decode", r.GetDecode)
+	r.POST("/decode", r.PostDecode)
 	r.Logger.Fatal(r.Start(":8080"))
 }

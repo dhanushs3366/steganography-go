@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/jpeg"
 	"image/png"
+	"io"
 	"os"
 	"path"
 	"path/filepath"
@@ -26,6 +27,63 @@ func (r *Router) GetEncode(c echo.Context) error {
 }
 
 func (r *Router) PostEncode(c echo.Context) error {
+
+	file, err := c.FormFile("encode-image")
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	src, err := file.Open()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	defer src.Close()
+
+	img, err := png.Decode(src)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	dstName := "encode.png"
+	dst, err := os.Create(outputDir + "/" + dstName)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	defer dst.Close()
+	if err = png.Encode(dst, img); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return pages.RenderEncode(dstName).Render(c.Request().Context(), c.Response().Writer)
+}
+
+func (r *Router) PngToJpg(src io.Reader) (image.Image, error) {
+	img, err := png.Decode(src)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return img, nil
+}
+
+func (r *Router) GetEncodedImage(fileName string, c echo.Context) error {
+	filename := c.Param(fileName)
+
+	return c.Attachment(filename, filename)
+}
+
+func (r *Router) GetDecode(c echo.Context) error {
+	return pages.GetDecode().Render(c.Request().Context(), c.Response().Writer)
+}
+
+func (r *Router) PostDecode(c echo.Context) error {
 	file, err := c.FormFile("encode-image")
 	if err != nil {
 		fmt.Println(err)
@@ -38,47 +96,36 @@ func (r *Router) PostEncode(c echo.Context) error {
 	}
 	defer src.Close()
 
-	// Check if the uploaded file is PNG
 	ext := filepath.Ext(file.Filename)
 	isPNG := strings.EqualFold(ext, ".png")
 
 	var img image.Image
-	fmt.Println("PNG sec initiation")
 	if isPNG {
-		// Decode the PNG image
-		img, err = png.Decode(src)
+		img, err = r.PngToJpg(src)
 		if err != nil {
-
-			fmt.Println(err)
 			return err
 		}
 	} else {
-		// Assume other image types are already JPEG or similar
 		img, _, err = image.Decode(src)
 		if err != nil {
-
 			fmt.Println(err)
 			return err
 		}
 	}
 
-	// Destination
-	dstName := "encode"
+	dstName := "decode"
 	if isPNG {
 		dstName = strings.TrimSuffix(dstName, ext) + ".jpg"
 	}
 	dst, err := os.Create(outputDir + "/" + dstName)
 	if err != nil {
-
 		fmt.Println(err)
 		return err
 	}
 	defer dst.Close()
 
-	// Encode the image as JPEG
 	err = jpeg.Encode(dst, img, nil)
 	if err != nil {
-
 		fmt.Println(err)
 		return err
 	}
@@ -87,22 +134,16 @@ func (r *Router) PostEncode(c echo.Context) error {
 
 	err = os.Rename(dst.Name(), newPath)
 	if err != nil {
-
 		fmt.Println(err)
 		return err
 	}
 
-	err = stegano.Encode(newPath, "Hello World")
+	text, err := stegano.Decode(newPath)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(err)
 		return err
 	}
+	println(text)
+	return pages.RenderDecode(text).Render(c.Request().Context(), c.Response().Writer)
 
-	return pages.RenderEncode("encoded.png").Render(c.Request().Context(), c.Response().Writer)
-}
-
-func (r *Router) GetEncodedImage(fileName string, c echo.Context) error {
-	filename := c.Param(fileName)
-
-	return c.Attachment(filename, filename)
 }

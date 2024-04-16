@@ -9,7 +9,9 @@ import (
 	"os"
 )
 
-// Encode embeds a text message into an image using LSB steganography
+// End of message delimiter
+const endOfMessageDelimiter = "########"
+
 func Encode(imagePath string, message string) error {
 	// Open the image file
 	file, err := os.Open(imagePath)
@@ -26,7 +28,7 @@ func Encode(imagePath string, message string) error {
 
 	bounds := img.Bounds()
 	maxChars := (bounds.Dx() * bounds.Dy() * 3) / 8
-	if len(message) > maxChars {
+	if len(message)+len(endOfMessageDelimiter) > maxChars {
 		return fmt.Errorf("message is too long to embed in the image")
 	}
 
@@ -59,6 +61,16 @@ func Encode(imagePath string, message string) error {
 			// Set the modified pixel color
 			rgba.Set(x, y, color.RGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), 255})
 		}
+	}
+
+	// Add end of message delimiter
+	for _, char := range endOfMessageDelimiter {
+		r, g, b, _ := img.At(bounds.Min.X, bounds.Min.Y).RGBA()
+		r = embedChar(r, byte(char))
+		g = embedChar(g, byte(char))
+		b = embedChar(b, byte(char))
+		rgba.Set(bounds.Min.X, bounds.Min.Y, color.RGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), 255})
+		bounds.Min.X++
 	}
 
 	// Create a new image file with the embedded message

@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/DimitarPetrov/stegify v0.0.0-20230411060737-5d278781a3c1 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

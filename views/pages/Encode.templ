@@ -5,7 +5,7 @@ var formElements=[...]string{"Base File","Encode File"}
 var formNames=[...]string{"baseFile","encodeFile"}
 
 templ GetEncode(){
-    <div class={ consts.ChildrenBody+consts.FontText+"bg-black-600"}>
+    <div class={ consts.ChildrenBody+consts.FontText+"bg-black-600"} >
         <form  hx-post="/encode" hx-target="#encode-target" hx-encoding="multipart/form-data" hx-swap="innerHTML" hx-trigger="submit" class={ consts.Form}>
             
                 <div class="mb-4" >
@@ -25,6 +25,8 @@ templ GetEncode(){
 templ RenderEncode(imagePath string){
     
     <h1 class={consts.TextLarge}>Decoded Image: </h1>
-    <img src={"output/"+imagePath}/>
+    <div class={consts.ImageContainer}>    
+        <img src={"output/"+imagePath} class={consts.Image}/>
+    </div>
     <button type="button" class={consts.BlueButton}><a href={ "/encode/"+templ.URL(imagePath)}>Download</a></button>
 }

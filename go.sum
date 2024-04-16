@@ -1,3 +1,5 @@
+github.com/DimitarPetrov/stegify v0.0.0-20230411060737-5d278781a3c1 h1:rNwKbLSjAd4w7TqgNf2RJ298yNVy8UomsZw4yeloHjQ=
+github.com/DimitarPetrov/stegify v0.0.0-20230411060737-5d278781a3c1/go.mod h1:x0wKH7k9G68nVhLLQyNCO/fyPnK8Smd+KwO/kyVmTt0=
 github.com/a-h/templ v0.2.663 h1:aa0WMm27InkYHGjimcM7us6hJ6BLhg98ZbfaiDPyjHE=
 github.com/a-h/templ v0.2.663/go.mod h1:SA7mtYwVEajbIXFRh3vKdYm/4FYyLQAtPH1+KxzGPA8=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
