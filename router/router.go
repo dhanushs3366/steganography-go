@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"steganography/consts"
 	pages "steganography/views/pages"
 
 	"github.com/labstack/echo/v4"
@@ -21,6 +22,8 @@ type Router struct {
 }
 
 func (r *Router) GetEncode(c echo.Context) error {
+	consts.CLIENT_STATE = "ENCODE"
+
 	return pages.GetEncode().Render(c.Request().Context(), c.Response().Writer)
 }
 
@@ -93,6 +96,7 @@ func (r *Router) GetEncodedImage(fileName string, c echo.Context) error {
 }
 
 func (r *Router) GetDecode(c echo.Context) error {
+	consts.CLIENT_STATE = "DECODE"
 	return pages.GetDecode().Render(c.Request().Context(), c.Response().Writer)
 }
 

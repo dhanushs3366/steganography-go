@@ -1,6 +1,7 @@
 package main
 
 import (
+	"steganography/consts"
 	"steganography/router"
 	"steganography/views"
 
@@ -11,11 +12,13 @@ func main() {
 
 	r := &router.Router{Echo: echo.New()}
 
+	r.Static("/output", "output")
+	r.Static("/static", "static")
 	r.GET("/", func(c echo.Context) error {
+		consts.CLIENT_STATE = "HOME"
 		return views.Boilerplate().Render(c.Request().Context(), c.Response().Writer)
 	})
 
-	r.Static("/output", "output")
 	r.GET("/encode", r.GetEncode)
 	r.POST("/encode", r.PostEncode)
 	r.GET("/encode/:filename", func(c echo.Context) error {

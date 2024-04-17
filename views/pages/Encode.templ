@@ -18,15 +18,18 @@ templ GetEncode(){
                 </div>
             <button type="submit" class={ consts.BlueButton}>Encode</button> 
         </form>
-           
+        <script>
+            document.getElementById("encode-target").innerHTML = ''
+        </script>
     </div>
 }
 
 templ RenderEncode(imagePath string){
     
     <h1 class={consts.TextLarge}>Decoded Image: </h1>
-    <div class={consts.ImageContainer}>    
+    <div class={"mx-3"+consts.ImageContainer}>    
         <img src={"output/"+imagePath} class={consts.Image}/>
     </div>
+    <br/>
     <button type="button" class={consts.BlueButton}><a href={ "/encode/"+templ.URL(imagePath)}>Download</a></button>
 }

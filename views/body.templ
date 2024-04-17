@@ -1,13 +1,70 @@
 package views
-import consts "steganography/consts"
+
+import "steganography/consts"
 
 templ Body(){
-    <div class="w-full  flex flex-row mx-5" id="body">
-        <div class={ consts.ChildrenBody} id="encode-body">
-            <p class={consts.TextLarge}>Welcome Home</p>
+<div class="w-full flex flex-col justify-center items-center mx-5" id="body">
+    <!-- LSB Steganography -->
+    <h1 class="text-3xl font-semibold mb-4">LSB Steganography</h1>
+
+    <!-- Parent container for encode-body and encode-target -->
+    <div class="flex justify-center items-center space-x-8">
+        <!-- Left side -->
+        <div class="flex flex-col justify-center items-center" id="encode-body">
+            <div class="bg-white shadow-md rounded-md p-6">
+                <!-- Introduction to Steganography -->
+                <h2 class="text-xl font-semibold mb-2">Introduction to Steganography</h2>
+                <p class="text-gray-700 mb-4">Steganography is an ancient technique used for concealing information within seemingly innocuous data to maintain secrecy. Unlike cryptography, which encrypts messages to make them unintelligible, steganography focuses on covert communication by hiding the very existence of the message itself.</p>
+                
+                <!-- LSB Implementation in Steganography -->
+                <h2 class="text-xl font-semibold mb-2">LSB Implementation in Steganography</h2>
+                <p class="text-gray-700 mb-4">LSB steganography is a popular method that involves manipulating the least significant bit of each pixel in a digital image. Pixels in digital images are represented by binary values for their color components, such as red, green, and blue in RGB images. The least significant bit, being the smallest contributor to the pixel's color, can be modified without significantly altering the image's appearance.</p>
+
+                <!-- Steps in LSB Steganography -->
+                <h2 class="text-xl font-semibold mb-2">Steps in LSB Steganography</h2>
+                <ol class="list-decimal list-inside text-gray-700 mb-4">
+                    <li><strong>Selection of Cover Image:</strong> A suitable cover image, which appears ordinary and does not raise suspicion, is chosen to conceal the secret message.</li>
+                    <li><strong>Conversion of Message to Binary:</strong> The message intended for concealment is converted into binary format. Each character is represented by a series of bits, often using ASCII encoding.</li>
+                    <li><strong>Calculation of Pixels Needed:</strong> The number of pixels required to hide the entire message is calculated. Typically, at least three pixels are needed to conceal one character, assuming one bit per color channel per pixel.</li>
+                    <li><strong>Embedding the Message:</strong> The LSB of selected pixels in the cover image is replaced with the bits of the secret message. This process is repeated until the entire message is hidden within the image.</li>
+                    <li><strong>Visual Indistinguishability:</strong> The modifications made to the LSB ensure that the modified image appears visually identical to the original, making it challenging for unintended recipients to detect the presence of hidden data.</li>
+                </ol>
+                
+
+
+            </div>
+            <div>
+                
+            </div>
+
         </div>
-        <div class={ consts.ChildrenBody} id="encode-target">
-            <p class={consts.TextLarge}>Bye Home</p>
-        </div>
+        <!-- Right side -->
+        <div class="flex flex-col justify-center items-center" id="encode-target">
+        switch consts.CLIENT_STATE{
+            case "HOME":
+                <div class={consts.ImageContainer}>    
+                    <img src={"static/steg.png"} class={consts.Image}/>
+                </div>
+                <div class="bg-white shadow-md rounded-md p-6">
+                    <!-- Extraction of the Hidden Message -->
+                    <h2 class="text-xl font-semibold mb-2">Extraction of the Hidden Message</h2>
+                    <ul class="list-disc list-inside text-gray-700 mb-4">
+                        <li><strong>Reading LSBs:</strong> The LSB of each color channel in the selected pixels of the steganographic image is read.</li>
+                        <li><strong>Concatenation:</strong> The LSBs are concatenated to reconstruct the binary representation of the hidden message.</li>
+                        <li><strong>Conversion:</strong> The binary string is converted back into human-readable text, revealing the concealed information.</li>
+                    </ul>
+
+                    <!-- Limitations and Considerations -->
+                    <h2 class="text-xl font-semibold mb-2">Limitations and Considerations</h2>
+                    <p class="text-gray-700">While LSB steganography is relatively straightforward to implement and can effectively hide messages within digital images, it is not without limitations. Advanced detection techniques exist to identify the presence of hidden data, underscoring the ongoing challenge of maintaining secrecy in the digital age.</p>
+                </div>
+            case "ENCODE":
+            case "DECODE":
+                break    
+        }
+         </div>
     </div>
+</div>
+
+
 }

@@ -15,7 +15,9 @@ const TextLarge = "text-4xl font-bold text-gray-800"
 const FormTextInput = "border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring focus:border-blue-500"
 
 const Image = "max-w-full max-h-full"
-const ImageContainer = "w-96 h-96 bg-gray-200 flex items-center justify-center"
+const ImageContainer = "w-80 h-80 bg-gray-200 flex items-center justify-center"
 
 const TextMedium = "text-2xl font-bold text-gray-800"
 const TextSmall = "text-lg text-gray-800"
+
+var CLIENT_STATE = "HOME"
