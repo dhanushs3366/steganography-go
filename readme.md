@@ -14,6 +14,4 @@
     `python 3.10 stegano-py/main.py`
 
 7) in root dir run:
-    ``go run main.go`
-    
-`
+    ``go run main.go``
